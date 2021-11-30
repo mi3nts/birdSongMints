@@ -5,3 +5,4 @@ Contains firmware which classifies bird songs
 ### installing dependencies 
 ```install portaudio19-dev```
 
+``` pip3 install PyAudio```
