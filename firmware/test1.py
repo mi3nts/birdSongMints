@@ -19,6 +19,9 @@ dev_index = 11
 audio = pyaudio.PyAudio()
 
 print("Hello")
+
+print("Hello22")
+
 for i in range(audio.get_device_count()):
   dev = audio.get_device_info_by_index(i)
   print((i,dev['name'],dev['maxInputChannels']))
