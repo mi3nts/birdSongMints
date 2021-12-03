@@ -6,3 +6,8 @@ Contains firmware which classifies bird songs
 ```install portaudio19-dev```
 
 ``` pip3 install PyAudio```
+### installing udev rules
+``` sudo nano /etc/udev/rules.d/93-mymic.rules```
+### reloading
+``` sudo udevadm control --reload```
+
