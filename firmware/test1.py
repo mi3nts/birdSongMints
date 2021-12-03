@@ -5,17 +5,20 @@ from scipy.io import wavfile
 import time
 import sys
 from scipy.fftpack import fft
+from matplotlib import style
+
+
 
 FORMAT = pyaudio.paInt16 # We use 16bit format per sample
 CHANNELS = 1
-RATE =  44100
+RATE =  32000
 CHUNK = 1024 # 1024bytes of data red from a buffer
 INTERVAL = 1/RATE
 dev_index = 11
 
 audio = pyaudio.PyAudio()
 
-
+print("Hello")
 for i in range(audio.get_device_count()):
   dev = audio.get_device_info_by_index(i)
   print((i,dev['name'],dev['maxInputChannels']))
@@ -44,6 +47,11 @@ def main():
             #print(yf)
             print(xf[maxInd])
             stream.stop_stream()
+            plt.plot(xf,yf)
+            plt.pause(0.00001)
+            plt.clf()
+
+
         except KeyboardInterrupt:
             keep_going=False
         except:
