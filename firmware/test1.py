@@ -11,7 +11,7 @@ from matplotlib import style
 
 FORMAT = pyaudio.paInt16 # We use 16bit format per sample
 CHANNELS = 1
-RATE =  32000
+RATE =  44000
 CHUNK = 1024 # 1024bytes of data red from a buffer
 INTERVAL = 1/RATE
 dev_index = 11
