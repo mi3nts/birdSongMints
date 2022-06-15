@@ -196,8 +196,8 @@ if __name__ == '__main__':
         lbl.to_csv("NC/final.csv", index=False)
         
 
-        # Get label values from labels.csv and move the Labels column.
-        df1 = pd.read_csv("labels/Labels.csv")  # <-- adjust separator accordingly
+        # Get label values from labels.csv 
+        df1 = pd.read_csv("labels/Labels.csv")  
         df2 = pd.read_csv("NC/final.csv")
         df2["Labels"] = df2["Scientific name"].map(df1.set_index("Scientific name")["Labels"])
         df2.to_csv("NC/final.csv", index=False)
@@ -215,12 +215,7 @@ if __name__ == '__main__':
             
 
 
-        # A few examples to test
-        # python3 analyze.py --i example/ --o example/ --slist example/ --min_conf 0.5 --threads 4
-        # python3 analyze.py --i example/soundscape.wav --o example/soundscape.BirdNET.selection.table.txt --slist example/species_list.txt --threads 8
-        # python3 analyze.py --i example/ --o example/ --lat 42.5 --lon -76.45 --week 4 --sensitivity 1.0 --rtype table --locale de
         
-
 
 
 
