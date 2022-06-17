@@ -2,7 +2,8 @@
 Contains firmware which classifies bird songs
 
 ## Action Items.
- - Acknowlege the original authers of the ML alg
+ - Give a small summary of whats been done on this doc. 
+ - Acknowlege the original authers of the ML alg on this doc.
  - Create an ordered dictionary for each data point of data collected :
  ```
  def BSM001Write():
@@ -19,7 +20,9 @@ Contains firmware which classifies bird songs
  - Time stamps should have just the starting time stamp of the given birdcall - So you can ignore the start time variable
  - Some means to keep the data if needed 
  - The Sample audio file should be saved as /home/teamlary/mintsData/tmp/ 
- - If at any case  you a saving the audio file it should be saved at /home/teamlary/mintsData/yyyy/mm/dd/audio/MINTS_NODEID_BSM001_yyyy_mm_dd_hh_mm_ss.wav
+ - If at any case  you a saving the audio file it should be saved at /home/teamlary/mintsData/raw/yyyy/mm/dd/audio/MINTS_NODEID_BSM001_yyyy_mm_dd_hh_mm_ss.wav
 format. 
+- whole lot more commenting for the whole code
 
+Try initially on testBedBirdCalls PC on your DW Service Account
 
