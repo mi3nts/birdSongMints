@@ -24,5 +24,5 @@ Contains firmware which classifies bird songs
 format. 
 - whole lot more commenting for the whole code
 
-*Try initially on testBedBirdCalls PC on your DW Service Account*
+**Try initially on testBedBirdCalls PC on your DW Service Account**
 
