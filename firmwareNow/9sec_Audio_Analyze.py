@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     while True:
         #date = datetime.datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p")
-        myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=1)
+        myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=0)
         sd.wait()  # Wait until recording is finished
         write(os.path.join("NC/", "Audio.wav"), fs, myrecording)  # Save as WAV file
         
