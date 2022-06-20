@@ -26,3 +26,13 @@ format.
 
 **Try initially on testBedBirdCalls PC on your DW Service Account**
 
+## Updates to the current system
+
+- Install requirments.txt
+- reboot 
+- ``` pip3 install sounddevice==0.4.4```
+- ``` pip3 install -U pip setuptools ```
+- ``` pip3  install pandas ```
+- ``` pip3 install --extra-index-url https://google-coral.github.io/py-repo/ tflite_runtime ```
+- 
+
