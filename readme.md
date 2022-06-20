@@ -36,3 +36,13 @@ format.
 - ``` pip3 install --extra-index-url https://google-coral.github.io/py-repo/ tflite_runtime ```
 - 
 
+## VENV 
+
+  ```
+  python3 -m venv birdSongs
+  source birdSongs/bin/activate
+  pip3 install sounddevice
+  pip3 install scipy
+  
+  
+  ```
