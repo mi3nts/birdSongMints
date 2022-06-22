@@ -41,6 +41,7 @@ format.
   ```
   python3 -m venv birdSongs
   source birdSongs/bin/activate
+  pip3 install -U pip setuptools
   pip3 install sounddevice
   pip3 install scipy
   
