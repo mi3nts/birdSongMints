@@ -14,7 +14,7 @@ CHANNELS = 1
 RATE =  44000
 CHUNK = 1024 # 1024bytes of data red from a buffer
 INTERVAL = 1/RATE
-dev_index = 11
+dev_index = 3
 
 audio = pyaudio.PyAudio()
 
