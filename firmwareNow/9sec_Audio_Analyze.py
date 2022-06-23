@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     while True:
         #date = datetime.datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p")
-        myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
+        myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=1)
         sd.wait()  # Wait until recording is finished
         write(os.path.join("NC/", "Audio.wav"), fs, myrecording)  # Save as WAV file
         
@@ -197,7 +197,7 @@ if __name__ == '__main__':
         
 
         # Get label values from labels.csv 
-        df1 = pd.read_csv("labels/Labels.csv")  
+        df1 = pd.read_csv("labels/labels.csv")  
         df2 = pd.read_csv("NC/final.csv")
         df2["Labels"] = df2["Scientific name"].map(df1.set_index("Scientific name")["Labels"])
         df2.to_csv("NC/final.csv", index=False)
