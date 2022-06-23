@@ -39,11 +39,18 @@ format.
 ## VENV 
 
   ```
+  sudo apt-get install python3-venv
   python3 -m venv birdSongs
   source birdSongs/bin/activate
-  pip3 install -U pip setuptools
+  sudo apt-get install build-essential libssl-dev libffi-dev python-dev
   pip3 install sounddevice
   pip3 install scipy
+  pip3 install -U pip setuptools
+  pip3  install pandas
+  pip3 install --extra-index-url https://google-coral.github.io/py-repo/ tflite_runtime
+  sudo apt-get install llvm-10 lldb-10 llvm-10-dev libllvm10 llvm-10-runtime
+  pip3 install llvmlite==0.35.0
+  pip3 install librosa==0.9.1
   
   
   ```
