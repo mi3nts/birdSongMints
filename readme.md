@@ -49,6 +49,8 @@ format.
   pip3  install pandas
   pip3 install --extra-index-url https://google-coral.github.io/py-repo/ tflite_runtime
   sudo apt-get install llvm-10 lldb-10 llvm-10-dev libllvm10 llvm-10-runtime
+  sudo update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-10 10
+  sudo update-alternatives --config llvm-config
   pip3 install llvmlite==0.35.0
   pip3 install librosa==0.9.1
   
