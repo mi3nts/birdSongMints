@@ -1,5 +1,5 @@
-# birdSongMints
-Contains firmware which classifies bird songs
+# Introduction
+In this repository the firmwareNow contains a Python script built on BirdNET (https://github.com/kahst/BirdNET-Analyzer) which can identify birds based on their sound.
 
 ## Action Items.
  - Give a small summary of whats been done on this doc. 
@@ -24,19 +24,10 @@ Contains firmware which classifies bird songs
 format. 
 - whole lot more commenting for the whole code
 
-**Try initially on testBedBirdCalls PC on your DW Service Account**
 
-## Updates to the current system
+ 
 
-- Install requirments.txt
-- reboot 
-- ``` pip3 install sounddevice==0.4.4```
-- ``` pip3 install -U pip setuptools ```
-- ``` pip3  install pandas ```
-- ``` pip3 install --extra-index-url https://google-coral.github.io/py-repo/ tflite_runtime ```
-- 
-
-## VENV 
+## Setup for Virtual Environment on Ubuntu 
 
   ```
   sudo apt-get install python3-venv
