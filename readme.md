@@ -3,7 +3,7 @@ In this repository the firmwareNow contains a Python script built on BirdNET (ht
 
  
 
-## Setup on Ubuntu 
+# Setup on Ubuntu 
 
 Create a virtual environment with the name birdsongs and install the required packages. 
 
