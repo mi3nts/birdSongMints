@@ -24,7 +24,7 @@ Create a virtual environment with the name birdsongs and install the required pa
   pip3 install librosa==0.9.1
   ```
   ## Automate the code 
-  Install the following packages to automate the code, recieve continous data and deal with the data through MQTT
+  Install the following packages to deal with the data through MQTT
   
   ```
   pip3 install pyserial
