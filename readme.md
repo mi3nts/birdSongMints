@@ -22,7 +22,9 @@ Create a virtual environment with the name birdsongs and install the required pa
   sudo update-alternatives --config llvm-config
   pip3 install llvmlite==0.35.0
   pip3 install librosa==0.9.1
-  # Added on June 27 2022
+  '''
+  ## Added on June 27 2022
+  '''
   pip3 install pyserial
   pip3 install paho-mqtt
   pip3 install pyyaml==5.4.1
