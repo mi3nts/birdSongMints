@@ -177,6 +177,13 @@ if __name__ == '__main__':
         t = datetime.datetime.now().strftime("%Y_%m_%d,%H:%M:%S")
 
         df = pd.read_csv('NC/Audio.BirdNET.results.csv')
+        #save the audio file if the confidence is more than 0.7
+        if (len(df)) > 0 and df.iat[0,4] > 0.7:
+            print("Condition Satisfied to Save Audio file")
+            audio_loc = '/home/teamlary/mintsData/'
+            shutil.move("NC/Audio.wav", audio_loc)
+            os.rename(audio_loc+'/Audio.wav',audio_loc +f'_{t}.wav' )
+        df.insert(0,'Date', t)
         df.insert(0,'Date', t)
         
         df.to_csv("NC/Audio.BirdNET.results.csv", index = False)
