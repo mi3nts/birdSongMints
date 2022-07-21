@@ -13,6 +13,8 @@ import numpy as np
 import config as cfg
 import audio
 import model
+import argparse
+import sys
 
 
 
@@ -334,3 +336,122 @@ def analyzeFile(item):
     print('Finished {} in {:.2f} seconds'.format(fpath, delta_time), flush=True)
 
     return True
+
+
+
+
+
+
+def configSetUp(cfgIn,outPutPath,confidenceIn,cpuThreads):
+
+    # Parse arguments
+    parser = argparse.ArgumentParser(description='Analyze audio files with BirdNET')
+    parser.add_argument('--i', default=outPutPath, help='Path to input file or folder. If this is a file, --o needs to be a file too.')
+    parser.add_argument('--o', default=outPutPath, help='Path to output file or folder. If this is a file, --i needs to be a file too.')
+    parser.add_argument('--lat', type=float, default=32.779167, help='Recording location latitude. Set -1 to ignore.')
+    parser.add_argument('--lon', type=float, default=-96.808891, help='Recording location longitude. Set -1 to ignore.')
+    parser.add_argument('--week', type=int, default=-1, help='Week of the year when the recording was made. Values in [1, 48] (4 weeks per month). Set -1 for year-round species list.')
+    parser.add_argument('--slist', default='', help='Path to species list file or folder. If folder is provided, species list needs to be named \"species_list.txt\". If lat and lon are provided, this list will be ignored.')
+    parser.add_argument('--sensitivity', type=float, default=1.0, help='Detection sensitivity; Higher values result in higher sensitivity. Values in [0.5, 1.5]. Defaults to 1.0.')
+    parser.add_argument('--min_conf', type=float, default=confidenceIn, help='Minimum confidence threshold. Values in [0.01, 0.99]. Defaults to 0.1.')
+    parser.add_argument('--overlap', type=float, default=0.0, help='Overlap of prediction segments. Values in [0.0, 2.9]. Defaults to 0.0.')
+    parser.add_argument('--rtype', default='csv', help='Specifies output format. Values in [\'table\', \'audacity\', \'r\', \'csv\']. Defaults to \'table\' (Raven selection table).')
+    parser.add_argument('--threads', type=int, default=cpuThreads, help='Number of CPU threads.')
+    parser.add_argument('--batchsize', type=int, default=1, help='Number of samples to process at the same time. Defaults to 1.')
+    parser.add_argument('--locale', default='en', help='Locale for translated species common names. Values in [\'af\', \'de\', \'it\', ...] Defaults to \'en\'.')
+    parser.add_argument('--sf_thresh', type=float, default=0.03, help='Minimum species occurrence frequency threshold for location filter. Values in [0.01, 0.99]. Defaults to 0.03.')
+
+    args = parser.parse_args()
+
+    # Set paths relative to script path (requested in #3)
+    cfgIn.MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), cfgIn.MODEL_PATH)
+    cfgIn.LABELS_FILE = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), cfgIn.LABELS_FILE)
+    cfgIn.TRANSLATED_LABELS_PATH = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), cfgIn.TRANSLATED_LABELS_PATH)
+    cfgIn.MDATA_MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), cfgIn.MDATA_MODEL_PATH)
+    cfgIn.CODES_FILE = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), cfgIn.CODES_FILE)
+    cfgIn.ERROR_LOG_FILE = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), cfgIn.ERROR_LOG_FILE)
+
+    # Load eBird codes, labels
+    cfgIn.CODES = loadCodes()
+    cfgIn.LABELS = loadLabels(cfgIn.LABELS_FILE)
+
+    # Load translated labels
+    lfile = os.path.join(cfgIn.TRANSLATED_LABELS_PATH, os.path.basename(cfgIn.LABELS_FILE).replace('.txt', '_{}.txt'.format(args.locale)))
+    if not args.locale in ['en'] and os.path.isfile(lfile):
+        cfgIn.TRANSLATED_LABELS = loadLabels(lfile)
+    else:
+        cfgIn.TRANSLATED_LABELS = cfgIn.LABELS   
+
+    ### Make sure to comment out appropriately if you are not using args. ###
+
+    # Load species list from location filter or provided list
+    cfgIn.LATITUDE, cfgIn.LONGITUDE, cfgIn.WEEK = args.lat, args.lon, args.week
+    cfgIn.LOCATION_FILTER_THRESHOLD = max(0.01, min(0.99, float(args.sf_thresh)))
+    if cfgIn.LATITUDE == -1 and cfgIn.LONGITUDE == -1:
+        if len(args.slist) == 0:
+            cfgIn.SPECIES_LIST_FILE = None
+        else:
+            cfgIn.SPECIES_LIST_FILE = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), args.slist)
+            if os.path.isdir(cfgIn.SPECIES_LIST_FILE):
+                cfgIn.SPECIES_LIST_FILE = os.path.join(cfgIn.SPECIES_LIST_FILE, 'species_list.txt')
+        cfgIn.SPECIES_LIST = loadSpeciesList(cfgIn.SPECIES_LIST_FILE)
+    else:
+        predictSpeciesList()
+    if len(cfgIn.SPECIES_LIST) == 0:
+        print('Species list contains {} species'.format(len(cfgIn.LABELS)))
+    else:        
+        print('Species list contains {} species'.format(len(cfgIn.SPECIES_LIST)))
+
+    # Set input and output path    
+    cfgIn.INPUT_PATH = args.i
+    cfgIn.OUTPUT_PATH = args.o
+
+    # Parse input files
+    if os.path.isdir(cfgIn.INPUT_PATH):
+        cfgIn.FILE_LIST = parseInputFiles(cfgIn.INPUT_PATH)  
+    else:
+        cfgIn.FILE_LIST = [cfgIn.INPUT_PATH]
+
+    # Set confidence threshold
+    cfgIn.MIN_CONFIDENCE = max(0.01, min(0.99, float(args.min_conf)))
+
+    # Set sensitivity
+    cfgIn.SIGMOID_SENSITIVITY = max(0.5, min(1.0 - (float(args.sensitivity) - 1.0), 1.5))
+
+    # Set overlap
+    cfgIn.SIG_OVERLAP = max(0.0, min(2.9, float(args.overlap)))
+
+    # Set result type
+    cfgIn.RESULT_TYPE = args.rtype.lower()    
+    if not cfgIn.RESULT_TYPE in ['table', 'audacity', 'r', 'csv']:
+        cfgIn.RESULT_TYPE = 'table'
+
+    # Set number of threads
+    if os.path.isdir(cfgIn.INPUT_PATH):
+        cfgIn.CPU_THREADS = max(1, int(args.threads))
+        cfgIn.TFLITE_THREADS = 1
+    else:
+        cfgIn.CPU_THREADS = 1
+        cfgIn.TFLITE_THREADS = max(1, int(args.threads))
+
+    # Set batch size
+    cfgIn.BATCH_SIZE = max(1, int(args.batchsize))
+
+    # Add config items to each file list entry.
+    # We have to do this for Windows which does not
+    # support fork() and thus each process has to
+    # have its own config. USE LINUX!
+    flist = []
+    for f in cfgIn.FILE_LIST:
+        flist.append((f, cfgIn.getConfig()))
+
+    # Analyze files   
+    if cfgIn.CPU_THREADS < 2:
+        for entry in flist:
+            analyzeFile(entry)
+    else:
+        with Pool(cfgIn.CPU_THREADS) as p:
+            p.map(analyzeFile, flist)
+
+
+    return cfgIn;
